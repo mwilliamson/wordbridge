@@ -4,21 +4,37 @@ import wordbridge.xmlparsing
 
 def read_document(tree):
     tree = wordbridge.xmlparsing.XmlElement(tree)
-    return Document(map(_read_paragraph, tree.xpath("//w:p")))
+    return document(map(_read_paragraph, tree.xpath("//w:p")))
     
 def _read_paragraph(element):
-    return Paragraph(map(_read_run, element.xpath("w:r")))
+    style = _single_or_none(element.xpath("w:pPr/w:pStyle/@w:val"))
+    return paragraph(map(_read_run, element.xpath("w:r")), style=style)
     
 def _read_run(element):
-    return Run(map(_read_text, element.xpath("w:t")))
+    return run(map(_read_text, element.xpath("w:t")))
     
 def _read_text(element):
-    return Text(element.text())
-    
+    return text(element.text())
+
+def _single_or_none(elements):
+    length = len(elements)
+    if length == 0:
+        return None
+    elif length == 1:
+        return elements[0]
+    else:
+        raise RuntimeError("list has {0} elements".format(length))
+
 Document = collections.namedtuple("Document", ["paragraphs"])
-
-Paragraph = collections.namedtuple("Paragraph", ["runs"])
-
+Paragraph = collections.namedtuple("Paragraph", ["runs", "style"])
 Run = collections.namedtuple("Run", ["texts"])
-
 Text = collections.namedtuple("Text", ["text"])
+
+document = Document
+
+def paragraph(runs, style=None):
+    return Paragraph(runs, style)
+
+run = Run
+
+text = Text

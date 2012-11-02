@@ -10,15 +10,15 @@ html = HtmlBuilder()
 
 @istest
 def generating_html_for_document_concats_html_for_paragraphs():
-    document = openxml.Document([
-        openxml.Paragraph([
-            openxml.Run([
-                openxml.Text("Hello")
+    document = openxml.document([
+        openxml.paragraph([
+            openxml.run([
+                openxml.text("Hello")
             ])
         ]),
-        openxml.Paragraph([
-            openxml.Run([
-                openxml.Text("there")
+        openxml.paragraph([
+            openxml.run([
+                openxml.text("there")
             ])
         ])
     ])

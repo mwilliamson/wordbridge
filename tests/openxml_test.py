@@ -9,10 +9,10 @@ def word_document_containing_one_paragraph_is_read():
     
     result = openxml.read_document(document_xml)
     
-    expected_document = openxml.Document([
-        openxml.Paragraph([
-            openxml.Run([
-                openxml.Text("Hello.")
+    expected_document = openxml.document([
+        openxml.paragraph([
+            openxml.run([
+                openxml.text("Hello.")
             ])
         ])
     ])
@@ -27,17 +27,37 @@ def multiple_p_elements_are_read_as_multiple_paragraphs():
     
     result = openxml.read_document(document_xml)
     
-    expected_document = openxml.Document([
-        openxml.Paragraph([
-            openxml.Run([
-                openxml.Text("Hello")
+    expected_document = openxml.document([
+        openxml.paragraph([
+            openxml.run([
+                openxml.text("Hello")
             ])
         ]),
-        openxml.Paragraph([
-            openxml.Run([
-                openxml.Text("there")
+        openxml.paragraph([
+            openxml.run([
+                openxml.text("there")
             ])
         ])
+    ])
+    assert_equal(expected_document, result)
+
+@istest
+def paragraph_style_is_read_from_paragraph_properties_element():
+    document_xml = _create_document_xml(
+        "<w:p>" + 
+            """<w:pPr><w:pStyle w:val="Heading1"/></w:pPr>""" +
+            "<w:r><w:t>Hello.</w:t></w:r>" +
+        "</w:p>"
+    )
+    
+    result = openxml.read_document(document_xml)
+    
+    expected_document = openxml.document([
+        openxml.paragraph([
+            openxml.run([
+                openxml.text("Hello.")
+            ])
+        ], style="Heading1")
     ])
     assert_equal(expected_document, result)
 
