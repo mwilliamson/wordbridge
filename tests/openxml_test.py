@@ -18,6 +18,29 @@ def word_document_containing_one_pararaph_is_read():
     ])
     assert_equal(expected_document, result)
 
+@istest
+def multiple_p_elements_are_read_as_multiple_paragraphs():
+    document_xml = _create_document_xml(
+        "<w:p><w:r><w:t>Hello</w:t></w:r></w:p>" +
+        "<w:p><w:r><w:t>there</w:t></w:r></w:p>"
+    )
+    
+    result = openxml.read_document(document_xml)
+    
+    expected_document = openxml.Document([
+        openxml.Paragraph([
+            openxml.Run([
+                openxml.Text("Hello")
+            ])
+        ]),
+        openxml.Paragraph([
+            openxml.Run([
+                openxml.Text("there")
+            ])
+        ])
+    ])
+    assert_equal(expected_document, result)
+
 def _create_document_xml(inner_xml):
     return etree.fromstring(_WORD_DOCUMENT_TEMPLATE.format(inner_xml))
 
