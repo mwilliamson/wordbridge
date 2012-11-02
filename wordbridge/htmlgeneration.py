@@ -13,6 +13,6 @@ class HtmlGenerator(object):
             for text in run.texts:
                 paragraph_text.append(text.text)
         
-        return html.p([html.text("".join(paragraph_text))])
+        return html.element("p", [html.text("".join(paragraph_text))])
 
     

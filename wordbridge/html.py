@@ -2,11 +2,8 @@ import collections
 import cgi
 
 class HtmlBuilder(object):
-    def __getattr__(self, tag_name):
-        def _builder(children):
-            return HtmlElement(tag_name, children) 
-        
-        return _builder
+    def element(self, tag_name, children):
+        return HtmlElement(tag_name, children) 
     
     def fragment(self, children):
         return HtmlFragment(children)

@@ -23,7 +23,7 @@ def generating_html_for_document_concats_html_for_paragraphs():
         ])
     ])
     expected_html = html.fragment([
-        html.p([html.text("Hello")]),
-        html.p([html.text("there")])
+        html.element("p", [html.text("Hello")]),
+        html.element("p", [html.text("there")])
     ])
     assert_equal(expected_html, generator.for_document(document))
