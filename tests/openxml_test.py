@@ -4,7 +4,7 @@ from lxml import etree
 from wordbridge import openxml
 
 @istest
-def word_document_containing_one_pararaph_is_read():
+def word_document_containing_one_paragraph_is_read():
     document_xml = _create_document_xml("<w:p><w:r><w:t>Hello.</w:t></w:r></w:p>")
     
     result = openxml.read_document(document_xml)

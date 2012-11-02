@@ -8,5 +8,5 @@ def convert_string_to_html(document_string):
     document = wordbridge.openxml.read_document(tree)
     
     generator = HtmlGenerator()
-    return generator.for_document(document)
+    return generator.for_document(document).to_html_string()
 
