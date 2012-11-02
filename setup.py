@@ -14,5 +14,5 @@ setup(
     author='Michael Williamson',
     url='http://github.com/mwilliamson/wordbridge',
     packages=['wordbridge'],
-    install_requires=[],
+    install_requires=["lxml==3.0.1"],
 )
