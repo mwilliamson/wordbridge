@@ -9,7 +9,6 @@ from wordbridge import styles
 
 def convert_to_html(docx_file):
     document_string = docx_file.read("word/document.xml")
-    print document_string
     tree = etree.fromstring(document_string)
     document = wordbridge.openxml.read_document(tree)
     
