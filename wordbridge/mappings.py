@@ -3,7 +3,28 @@ from wordbridge.html import HtmlBuilder
 html = HtmlBuilder()
 
 def top_level_element(tag_name):
-    def mapping(children):
-        return html.element(tag_name, children)
+    return TopLevelElement(tag_name)
+
+class TopLevelElement(object):
+    def __init__(self, tag_name):
+        self._tag_name = tag_name
     
-    return mapping
+    def start(self, html_stack):
+        html_stack.open(self._tag_name)
+        
+    def end(self, html_stack):
+        html_stack.close()
+        
+
+def unordered_list():
+    return UnorderedList()
+
+class UnorderedList(object):
+    def start(self, html_stack):
+        current_element = html_stack.current_element()
+        if current_element is None or current_element.tag_name != "ul":
+            html_stack.open("ul")
+        html_stack.open("li")
+        
+    def end(self, html_stack):
+        html_stack.close()

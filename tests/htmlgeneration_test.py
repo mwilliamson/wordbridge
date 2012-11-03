@@ -37,7 +37,9 @@ def html_for_paragraph_uses_p_tag_if_there_is_no_style():
             openxml.text("Hello")
         ])
     ])
-    expected_html = html.element("p", [html.text("Hello")])
+    expected_html = html.fragment([
+        html.element("p", [html.text("Hello")])
+    ])
     
     generator = HtmlGenerator()
     assert_equal(expected_html, generator.html_for_paragraph(paragraph))
@@ -49,9 +51,37 @@ def style_mapping_is_used_to_generate_html_for_paragraph_with_style():
             openxml.text("Hello")
         ])
     ], style="Heading1")
-    expected_html = html.element("h1", [html.text("Hello")])
+    expected_html = html.fragment([
+        html.element("h1", [html.text("Hello")])
+    ])
     
     generator = HtmlGenerator(paragraph_styles={
         "Heading1": mappings.top_level_element("h1")
     })
     assert_equal(expected_html, generator.html_for_paragraph(paragraph))
+    
+@istest
+def consecutive_word_bullet_paragraphs_are_converted_to_single_html_list():
+    document = openxml.document([
+        openxml.paragraph([
+            openxml.run([
+                openxml.text("Apples")
+            ])
+        ], style="Bullet1"),
+        openxml.paragraph([
+            openxml.run([
+                openxml.text("Bananas")
+            ])
+        ], style="Bullet1")
+    ])
+    expected_html = html.fragment([
+        html.element("ul", [
+            html.element("li", [html.text("Apples")]),
+            html.element("li", [html.text("Bananas")])
+        ])
+    ])
+    
+    generator = HtmlGenerator(paragraph_styles={
+        "Bullet1": mappings.unordered_list()
+    })
+    assert_equal(expected_html, generator.html_for_document(document))
