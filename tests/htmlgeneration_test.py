@@ -11,16 +11,8 @@ html = HtmlBuilder()
 @istest
 def generating_html_for_document_concats_html_for_paragraphs():
     document = openxml.document([
-        openxml.paragraph([
-            openxml.run([
-                openxml.text("Hello")
-            ])
-        ]),
-        openxml.paragraph([
-            openxml.run([
-                openxml.text("there")
-            ])
-        ])
+        _paragraph_of_text("Hello"),
+        _paragraph_of_text("there")
     ])
     expected_html = html.fragment([
         html.element("p", [html.text("Hello")]),
@@ -32,11 +24,7 @@ def generating_html_for_document_concats_html_for_paragraphs():
 
 @istest
 def html_for_paragraph_uses_p_tag_if_there_is_no_style():
-    paragraph = openxml.paragraph([
-        openxml.run([
-            openxml.text("Hello")
-        ])
-    ])
+    paragraph = _paragraph_of_text("Hello")
     expected_html = html.fragment([
         html.element("p", [html.text("Hello")])
     ])
@@ -46,11 +34,7 @@ def html_for_paragraph_uses_p_tag_if_there_is_no_style():
 
 @istest
 def style_mapping_is_used_to_generate_html_for_paragraph_with_style():
-    paragraph = openxml.paragraph([
-        openxml.run([
-            openxml.text("Hello")
-        ])
-    ], style="Heading1")
+    paragraph = _paragraph_of_text("Hello", style="Heading1")
     expected_html = html.fragment([
         html.element("h1", [html.text("Hello")])
     ])
@@ -63,16 +47,8 @@ def style_mapping_is_used_to_generate_html_for_paragraph_with_style():
 @istest
 def consecutive_word_bullet_paragraphs_are_converted_to_single_html_list():
     document = openxml.document([
-        openxml.paragraph([
-            openxml.run([
-                openxml.text("Apples")
-            ])
-        ], style="Bullet1"),
-        openxml.paragraph([
-            openxml.run([
-                openxml.text("Bananas")
-            ])
-        ], style="Bullet1")
+        _paragraph_of_text("Apples", style="Bullet1"),
+        _paragraph_of_text("Bananas", style="Bullet1")
     ])
     expected_html = html.fragment([
         html.element("ul", [
@@ -90,26 +66,10 @@ def consecutive_word_bullet_paragraphs_are_converted_to_single_html_list():
 @istest
 def bullets_of_multiple_depth_are_converted_to_nested_lists():
     document = openxml.document([
-        openxml.paragraph([
-            openxml.run([
-                openxml.text("Food")
-            ])
-        ], style="Bullet1"),
-        openxml.paragraph([
-            openxml.run([
-                openxml.text("Apples")
-            ])
-        ], style="Bullet2"),
-        openxml.paragraph([
-            openxml.run([
-                openxml.text("Bananas")
-            ])
-        ], style="Bullet2"),
-        openxml.paragraph([
-            openxml.run([
-                openxml.text("Drinks")
-            ])
-        ], style="Bullet1"),
+        _paragraph_of_text("Food", style="Bullet1"),
+        _paragraph_of_text("Apples", style="Bullet2"),
+        _paragraph_of_text("Bananas", style="Bullet2"),
+        _paragraph_of_text("Drinks", style="Bullet1"),
     ])
     expected_html = html.fragment([
         html.element("ul", [
@@ -129,3 +89,9 @@ def bullets_of_multiple_depth_are_converted_to_nested_lists():
         "Bullet2": styles.unordered_list(depth=2)
     })
     assert_equal(expected_html, generator.html_for_document(document))
+
+def _paragraph_of_text(text, style=None):
+    return openxml.paragraph([_run_of_text(text)], style=style)
+
+def _run_of_text(text):
+    return openxml.run([openxml.text(text)])
