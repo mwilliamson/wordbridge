@@ -1,13 +1,14 @@
 from nose.tools import istest, assert_equal
 from lxml import etree
 
+from wordbridge.openxml.documents import read_document
 from wordbridge import openxml
 
 @istest
 def word_document_containing_one_paragraph_is_read():
     document_xml = _create_document_xml("<w:p><w:r><w:t>Hello.</w:t></w:r></w:p>")
     
-    result = openxml.read_document(document_xml)
+    result = read_document(document_xml)
     
     expected_document = openxml.document([
         openxml.paragraph([
@@ -25,7 +26,7 @@ def multiple_p_elements_are_read_as_multiple_paragraphs():
         "<w:p><w:r><w:t>there</w:t></w:r></w:p>"
     )
     
-    result = openxml.read_document(document_xml)
+    result = read_document(document_xml)
     
     expected_document = openxml.document([
         openxml.paragraph([
@@ -50,7 +51,7 @@ def paragraph_style_is_read_from_paragraph_properties_element():
         "</w:p>"
     )
     
-    result = openxml.read_document(document_xml)
+    result = read_document(document_xml)
     
     expected_document = openxml.document([
         openxml.paragraph([
