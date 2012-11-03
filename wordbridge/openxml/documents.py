@@ -7,7 +7,7 @@ def read_document(tree):
     return document(map(_read_paragraph, tree.xpath("//w:p")))
     
 def _read_paragraph(element):
-    style = _single_or_none(element.xpath("w:pPr/w:pStyle/@w:val"))
+    style = element.single_xpath("w:pPr/w:pStyle/@w:val")
     return paragraph(map(_read_run, element.xpath("w:r")), style=style)
     
 def _read_run(element):
@@ -15,15 +15,6 @@ def _read_run(element):
     
 def _read_text(element):
     return text(element.text())
-
-def _single_or_none(elements):
-    length = len(elements)
-    if length == 0:
-        return None
-    elif length == 1:
-        return elements[0]
-    else:
-        raise RuntimeError("list has {0} elements".format(length))
 
 Document = collections.namedtuple("Document", ["paragraphs"])
 Paragraph = collections.namedtuple("Paragraph", ["runs", "style"])
