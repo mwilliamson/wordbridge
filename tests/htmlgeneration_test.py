@@ -5,7 +5,6 @@ from wordbridge import openxml
 from wordbridge.htmlgeneration import HtmlGenerator
 from wordbridge.html import HtmlBuilder
 
-generator = HtmlGenerator()
 html = HtmlBuilder()
 
 @istest
@@ -26,4 +25,18 @@ def generating_html_for_document_concats_html_for_paragraphs():
         html.element("p", [html.text("Hello")]),
         html.element("p", [html.text("there")])
     ])
+    
+    generator = HtmlGenerator()
     assert_equal(expected_html, generator.for_document(document))
+
+@istest
+def html_for_paragraph_uses_p_tag_if_there_is_no_style():
+    paragraph = openxml.paragraph([
+        openxml.run([
+            openxml.text("Hello")
+        ])
+    ])
+    expected_html = html.element("p", [html.text("Hello")])
+    
+    generator = HtmlGenerator()
+    assert_equal(expected_html, generator.for_paragraph(paragraph))
