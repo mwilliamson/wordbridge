@@ -61,6 +61,32 @@ def paragraph_style_is_read_from_paragraph_properties_element():
         ], style="Heading1")
     ])
     assert_equal(expected_document, result)
+    
+@istest
+def paragraph_style_is_read_from_paragraph_properties_element():
+    document_xml = _create_document_xml("""
+        <w:p> 
+          <w:pPr>
+            <w:pStyle w:val="ListParagraph"/>
+            <w:numPr>
+              <w:ilvl w:val="0"/>
+              <w:numId w:val="1"/>
+            </w:numPr>
+          </w:pPr>
+          <w:r><w:t>Hello.</w:t></w:r>
+        </w:p>"""
+    )
+    
+    result = read_document(document_xml)
+    
+    expected_document = openxml.document([
+        openxml.paragraph([
+            openxml.run([
+                openxml.text("Hello.")
+            ])
+        ], style="ListParagraph", numbering_level=0)
+    ])
+    assert_equal(expected_document, result)
 
 def _create_document_xml(inner_xml):
     return etree.fromstring(_WORD_DOCUMENT_TEMPLATE.format(inner_xml))
