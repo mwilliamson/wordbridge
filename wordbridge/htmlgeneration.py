@@ -64,6 +64,9 @@ class HtmlStack(object):
         else:
             return self._stack[-1]
     
+    def __iter__(self):
+        return iter(self._stack)
+    
     def _add_child(self, child):
         self._peek().children.append(child)
         

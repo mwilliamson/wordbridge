@@ -17,7 +17,10 @@ def _open_element(tag_name):
         html_stack.open_element(tag_name)
     
     return apply
-    
+
+def _close_element(html_stack):
+    html_stack.close_element()
+
 def _sequence(*funcs):
     def apply(html_stack):
         for func in funcs:
@@ -26,17 +29,52 @@ def _sequence(*funcs):
     return apply
 
 def unordered_list():
-    return UnorderedList()
-
-class UnorderedList(object):
-    def start(self, html_stack):
-        current_element = html_stack.current_element()
-        if current_element is None or current_element.tag_name != "ul":
-            html_stack.open_element("ul")
-        html_stack.open_element("li")
+    return Style(
+        on_start=_sequence(
+            _ensure_stack(ElementDescription("ul")),
+            _open_element("li")
+        ),
+        on_end=_no_op
+    )
+    
+class ElementDescription(object):
+    def __init__(self, tag_name):
+        self._tag_name = tag_name
         
-    def end(self, html_stack):
-        html_stack.close_element()
+    def matches(self, element):
+        return element.tag_name == self._tag_name
+        
+    def create(self, factory):
+        return factory(self._tag_name)
+    
+def _ensure_single_element_stack(tag_name):
+    def apply(html_stack):
+        current_element = html_stack.current_element()
+        if current_element is None or current_element.tag_name != tag_name:
+            html_stack.open_element(tag_name)
+            
+    return apply
+
+def _no_op(self):
+    return lambda html_stack: None
+
+def _ensure_stack(*matchers):
+    def partial_match(html_stack):
+        for existing_element, matcher in map(None, html_stack, matchers):
+            if existing_element is None:
+                return True
+            if matcher is None or not matcher.matches(existing_element):
+                return False
+        return True
+    
+    def apply(html_stack):
+        while not partial_match(html_stack):
+            html_stack.close_element()
+        for existing_element, matcher in map(None, html_stack, matchers):
+            if existing_element is None:
+                matcher.create(html_stack.open_element)
+        
+    return apply
 
 class Style(object):
     def __init__(self, on_start, on_end):
