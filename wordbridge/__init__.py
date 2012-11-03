@@ -26,5 +26,8 @@ def _create_paragraph_styles():
         styles.map_word_style("Heading2").to(styles.top_level_element("h2")),
         styles.map_word_style("Heading3").to(styles.top_level_element("h3")),
         styles.map_word_style("Heading4").to(styles.top_level_element("h4")),
-        styles.map_word_style("ListParagraph", numbering_level=0).to(styles.unordered_list(depth=1))
+        styles.map_word_style("ListParagraph", numbering_level=0).to(styles.unordered_list(depth=1)),
+        styles.map_word_style("ListParagraph", numbering_level=1).to(styles.unordered_list(depth=2)),
+        styles.map_word_style("ListParagraph", numbering_level=2).to(styles.unordered_list(depth=3)),
+        styles.map_word_style("ListParagraph", numbering_level=3).to(styles.unordered_list(depth=4))
     ]

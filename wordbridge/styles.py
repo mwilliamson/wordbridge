@@ -49,7 +49,7 @@ class MappingBuilder(object):
     def matches(self, paragraph):
         if paragraph.style != self._style_name:
             return False
-        if paragraph.numbering_level != self._numbering_level:
+        if self._numbering_level is not None and paragraph.numbering_level != self._numbering_level:
             return False
         return True
     
