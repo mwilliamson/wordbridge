@@ -3,10 +3,10 @@ from wordbridge.html import HtmlBuilder
 html = HtmlBuilder()
 
 class HtmlGenerator(object):
-    def for_document(self, document):
-        return html.fragment(map(self.for_paragraph, document.paragraphs))
+    def html_for_document(self, document):
+        return html.fragment(map(self.html_for_paragraph, document.paragraphs))
 
-    def for_paragraph(self, paragraph):
+    def html_for_paragraph(self, paragraph):
         paragraph_text = []
         
         for run in paragraph.runs:
