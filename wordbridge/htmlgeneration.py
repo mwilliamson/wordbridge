@@ -8,14 +8,14 @@ class HtmlGenerator(object):
         self._paragraph_styles = paragraph_styles
     
     def html_for_document(self, document):
-        html_stack = HtmlStack()
-        self._generate_document_html(document, html_stack)
-        html_stack.finish()
-        return html_stack.to_html_fragment()
+        return self._html_for(self._generate_document_html, document)
 
-    def html_for_paragraph(self, paragraph, html_stack=None):
+    def html_for_paragraph(self, paragraph):
+        return self._html_for(self._generate_paragraph_html, paragraph)
+
+    def _html_for(self, generator, element):
         html_stack = HtmlStack()
-        self._generate_paragraph_html(paragraph, html_stack)
+        generator(element, html_stack)
         html_stack.finish()
         return html_stack.to_html_fragment()
 
