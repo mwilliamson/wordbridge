@@ -85,3 +85,47 @@ def consecutive_word_bullet_paragraphs_are_converted_to_single_html_list():
         "Bullet1": mappings.unordered_list()
     })
     assert_equal(expected_html, generator.html_for_document(document))
+
+
+@istest
+def bullets_of_multiple_depth_are_converted_to_nested_lists():
+    document = openxml.document([
+        openxml.paragraph([
+            openxml.run([
+                openxml.text("Food")
+            ])
+        ], style="Bullet1"),
+        openxml.paragraph([
+            openxml.run([
+                openxml.text("Apples")
+            ])
+        ], style="Bullet2"),
+        openxml.paragraph([
+            openxml.run([
+                openxml.text("Bananas")
+            ])
+        ], style="Bullet2"),
+        openxml.paragraph([
+            openxml.run([
+                openxml.text("Drinks")
+            ])
+        ], style="Bullet1"),
+    ])
+    expected_html = html.fragment([
+        html.element("ul", [
+            html.element("li", [
+                html.text("Food"),
+                html.element("ul", [
+                    html.element("li", [html.text("Apples")]),
+                    html.element("li", [html.text("Bananas")])
+                ])
+            ]),
+            html.element("li", [html.text("Drinks")])
+        ])
+    ])
+    
+    generator = HtmlGenerator(paragraph_styles={
+        "Bullet1": mappings.unordered_list(depth=1),
+        "Bullet2": mappings.unordered_list(depth=2)
+    })
+    assert_equal(expected_html, generator.html_for_document(document))

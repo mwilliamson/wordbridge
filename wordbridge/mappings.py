@@ -28,10 +28,16 @@ def _sequence(*funcs):
         
     return apply
 
-def unordered_list():
+def unordered_list(depth=1):
+    descriptions = []
+    for i in range(0, depth - 1):
+        descriptions.append(ElementDescription("ul"))
+        descriptions.append(ElementDescription("li"))
+    descriptions.append(ElementDescription("ul"))
+    
     return Style(
         on_start=_sequence(
-            _ensure_stack(ElementDescription("ul")),
+            _ensure_stack(*descriptions),
             _open_element("li")
         ),
         on_end=_no_op
