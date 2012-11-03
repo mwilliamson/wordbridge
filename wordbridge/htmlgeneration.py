@@ -16,7 +16,6 @@ class HtmlGenerator(object):
     def _html_for(self, generator, element):
         html_stack = HtmlStack()
         generator(element, html_stack)
-        html_stack.finish()
         return html_stack.to_html_fragment()
 
     def _generate_document_html(self, document, html_stack):
@@ -46,18 +45,15 @@ class HtmlStack(object):
         self._stack = []
         
     def open_element(self, tag_name):
-        self._stack.append(html.element(tag_name, []))
+        element = html.element(tag_name, [])
+        self._add_child(element)
+        self._stack.append(element)
     
     def close_element(self):
         popped = self._stack.pop()
-        self._add_child(popped)
     
     def text(self, text):
         self._add_child(html.text(text))
-    
-    def finish(self):
-        while len(self._stack) != 0:
-            self.close_element()
     
     def to_html_fragment(self):
         return self._fragment
