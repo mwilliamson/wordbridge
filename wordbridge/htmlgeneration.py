@@ -1,4 +1,4 @@
-from wordbridge import mappings
+from wordbridge import styles
 from wordbridge.htmlstack import HtmlStack
 
 class HtmlGenerator(object):
@@ -37,5 +37,5 @@ class HtmlGenerator(object):
         else:
             return _default_paragraph_mapping
 
-_default_paragraph_mapping = mappings.top_level_element("p")
+_default_paragraph_mapping = styles.top_level_element("p")
     

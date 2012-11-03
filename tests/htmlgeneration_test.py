@@ -4,7 +4,7 @@ from lxml import etree
 from wordbridge import openxml
 from wordbridge.htmlgeneration import HtmlGenerator
 from wordbridge.html import HtmlBuilder
-from wordbridge import mappings
+from wordbridge import styles
 
 html = HtmlBuilder()
 
@@ -56,7 +56,7 @@ def style_mapping_is_used_to_generate_html_for_paragraph_with_style():
     ])
     
     generator = HtmlGenerator(paragraph_styles={
-        "Heading1": mappings.top_level_element("h1")
+        "Heading1": styles.top_level_element("h1")
     })
     assert_equal(expected_html, generator.html_for_paragraph(paragraph))
     
@@ -82,7 +82,7 @@ def consecutive_word_bullet_paragraphs_are_converted_to_single_html_list():
     ])
     
     generator = HtmlGenerator(paragraph_styles={
-        "Bullet1": mappings.unordered_list()
+        "Bullet1": styles.unordered_list()
     })
     assert_equal(expected_html, generator.html_for_document(document))
 
@@ -125,7 +125,7 @@ def bullets_of_multiple_depth_are_converted_to_nested_lists():
     ])
     
     generator = HtmlGenerator(paragraph_styles={
-        "Bullet1": mappings.unordered_list(depth=1),
-        "Bullet2": mappings.unordered_list(depth=2)
+        "Bullet1": styles.unordered_list(depth=1),
+        "Bullet2": styles.unordered_list(depth=2)
     })
     assert_equal(expected_html, generator.html_for_document(document))
