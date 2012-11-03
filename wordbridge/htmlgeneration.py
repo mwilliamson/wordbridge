@@ -24,20 +24,21 @@ class HtmlGenerator(object):
             self._generate_paragraph_html(paragraph, html_stack)
         
     def _generate_paragraph_html(self, paragraph, html_stack):
-        style = paragraph.style
-        if style in self._paragraph_styles:
-            style_mapping = self._paragraph_styles[style]
-        else:
-            style_mapping = _default_paragraph_mapping
+        style = self._find_paragraph_style(paragraph.style)
             
-        style_mapping.start(html_stack)
+        style.start(html_stack)
             
         for run in paragraph.runs:
             for text in run.texts:
                 html_stack.text(text.text)
                 
-        style_mapping.end(html_stack)
-        
+        style.end(html_stack)
+    
+    def _find_paragraph_style(self, style_name):
+        if style_name in self._paragraph_styles:
+            return self._paragraph_styles[style_name]
+        else:
+            return _default_paragraph_mapping
 
 class HtmlStack(object):
     def __init__(self):
