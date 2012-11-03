@@ -2,7 +2,7 @@ from wordbridge import styles
 from wordbridge.htmlstack import HtmlStack
 
 class HtmlGenerator(object):
-    def __init__(self, paragraph_styles={}):
+    def __init__(self, paragraph_styles=[]):
         self._paragraph_styles = paragraph_styles
     
     def html_for_document(self, document):
@@ -21,7 +21,7 @@ class HtmlGenerator(object):
             self._generate_paragraph_html(paragraph, html_stack)
         
     def _generate_paragraph_html(self, paragraph, html_stack):
-        style = self._find_paragraph_style(paragraph.style)
+        style = self._find_paragraph_style(paragraph)
             
         style.start(html_stack)
             
@@ -31,11 +31,11 @@ class HtmlGenerator(object):
                 
         style.end(html_stack)
     
-    def _find_paragraph_style(self, style_name):
-        if style_name in self._paragraph_styles:
-            return self._paragraph_styles[style_name]
-        else:
-            return _default_paragraph_mapping
+    def _find_paragraph_style(self, paragraph):
+        for mapping in self._paragraph_styles:
+            if mapping.matches(paragraph):
+                return mapping.style
+        return _default_paragraph_mapping
 
 _default_paragraph_mapping = styles.top_level_element("p")
     

@@ -37,3 +37,30 @@ class Style(object):
         
     def end(self, html_stack):
         return self._on_end(html_stack)
+
+def map_word_style(*args, **kwargs):
+    return MappingBuilder(*args, **kwargs)
+    
+class MappingBuilder(object):
+    def __init__(self, style_name, numbering_level=None):
+        self._style_name = style_name
+        self._numbering_level = numbering_level
+    
+    def matches(self, paragraph):
+        if paragraph.style != self._style_name:
+            return False
+        if paragraph.numbering_level != self._numbering_level:
+            return False
+        return True
+    
+    def to(self, style):
+        return Mapping(self.matches, style)
+        
+class Mapping(object):
+    def __init__(self, word_style_matcher, style):
+        self._word_style_matcher = word_style_matcher
+        self.style = style
+
+    def matches(self, paragraph):
+        return self._word_style_matcher(paragraph)
+    

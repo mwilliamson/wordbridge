@@ -4,6 +4,7 @@ from lxml import etree
 
 import wordbridge.xmlparsing
 import wordbridge.openxml
+from wordbridge import openxml
 from wordbridge.htmlgeneration import HtmlGenerator
 from wordbridge import styles
 
@@ -20,9 +21,10 @@ def convert_docx_file_to_html(path):
         return convert_to_html(zip_file)
 
 def _create_paragraph_styles():
-    return {
-        "Heading1": styles.top_level_element("h1"),
-        "Heading2": styles.top_level_element("h2"),
-        "Heading3": styles.top_level_element("h3"),
-        "Heading4": styles.top_level_element("h4"),
-    }
+    return [
+        styles.map_word_style("Heading1").to(styles.top_level_element("h1")),
+        styles.map_word_style("Heading2").to(styles.top_level_element("h2")),
+        styles.map_word_style("Heading3").to(styles.top_level_element("h3")),
+        styles.map_word_style("Heading4").to(styles.top_level_element("h4")),
+        styles.map_word_style("ListParagraph", numbering_level=0).to(styles.unordered_list(depth=1))
+    ]

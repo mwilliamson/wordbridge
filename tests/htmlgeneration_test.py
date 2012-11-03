@@ -39,9 +39,9 @@ def style_mapping_is_used_to_generate_html_for_paragraph_with_style():
         html.element("h1", [html.text("Hello")])
     ])
     
-    generator = HtmlGenerator(paragraph_styles={
-        "Heading1": styles.top_level_element("h1")
-    })
+    generator = HtmlGenerator(paragraph_styles=[
+        styles.map_word_style("Heading1").to(styles.top_level_element("h1"))
+    ])
     assert_equal(expected_html, generator.html_for_paragraph(paragraph))
     
 @istest
@@ -57,9 +57,9 @@ def consecutive_word_bullet_paragraphs_are_converted_to_single_html_list():
         ])
     ])
     
-    generator = HtmlGenerator(paragraph_styles={
-        "Bullet1": styles.unordered_list()
-    })
+    generator = HtmlGenerator(paragraph_styles=[
+        styles.map_word_style("Bullet1").to(styles.unordered_list())
+    ])
     assert_equal(expected_html, generator.html_for_document(document))
 
 
@@ -84,10 +84,10 @@ def bullets_of_multiple_depth_are_converted_to_nested_lists():
         ])
     ])
     
-    generator = HtmlGenerator(paragraph_styles={
-        "Bullet1": styles.unordered_list(depth=1),
-        "Bullet2": styles.unordered_list(depth=2)
-    })
+    generator = HtmlGenerator(paragraph_styles=[
+        styles.map_word_style("Bullet1").to(styles.unordered_list(depth=1)),
+        styles.map_word_style("Bullet2").to(styles.unordered_list(depth=2))
+    ])
     assert_equal(expected_html, generator.html_for_document(document))
 
 def _paragraph_of_text(text, style=None):
