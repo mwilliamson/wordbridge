@@ -44,10 +44,10 @@ class HtmlStack(object):
         self._fragment = html.fragment([])
         self._stack = []
         
-    def open(self, tag_name):
+    def open_element(self, tag_name):
         self._stack.append(html.element(tag_name, []))
     
-    def close(self):
+    def close_element(self):
         popped = self._stack.pop()
         self._add_child(popped)
     
@@ -56,7 +56,7 @@ class HtmlStack(object):
     
     def finish(self):
         while len(self._stack) != 0:
-            self.close()
+            self.close_element()
     
     def to_html_fragment(self):
         return self._fragment

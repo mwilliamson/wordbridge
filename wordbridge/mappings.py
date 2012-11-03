@@ -10,10 +10,10 @@ class TopLevelElement(object):
         self._tag_name = tag_name
     
     def start(self, html_stack):
-        html_stack.open(self._tag_name)
+        html_stack.open_element(self._tag_name)
         
     def end(self, html_stack):
-        html_stack.close()
+        html_stack.close_element()
         
 
 def unordered_list():
@@ -23,8 +23,8 @@ class UnorderedList(object):
     def start(self, html_stack):
         current_element = html_stack.current_element()
         if current_element is None or current_element.tag_name != "ul":
-            html_stack.open("ul")
-        html_stack.open("li")
+            html_stack.open_element("ul")
+        html_stack.open_element("li")
         
     def end(self, html_stack):
-        html_stack.close()
+        html_stack.close_element()
