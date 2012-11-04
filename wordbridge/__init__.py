@@ -1,7 +1,5 @@
 import zipfile
 
-from lxml import etree
-
 import wordbridge.xmlparsing
 import wordbridge.openxml
 from wordbridge import openxml
@@ -10,7 +8,7 @@ from wordbridge import styles
 
 def convert_to_html(docx_file):
     document_string = docx_file.read("word/document.xml")
-    tree = etree.fromstring(document_string)
+    tree = wordbridge.xmlparsing.parse_string(document_string)
     document = wordbridge.openxml.read_document(tree)
     
     generator = HtmlGenerator(paragraph_styles=_create_paragraph_styles())

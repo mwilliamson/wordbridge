@@ -11,27 +11,27 @@ def read_string(string):
     
     abstract_definitions = dict(map(
         _read_abstract_num,
-        tree.xpath("//w:abstractNum")
+        tree.find_nodes("//w:abstractNum")
     ))
     
     return numbering(dict(
         _read_definition(abstract_definitions, element)
-        for element in tree.xpath("//w:num")
+        for element in tree.find_nodes("//w:num")
     ))
 
 def _read_abstract_num(element):
-    abstract_num_id = element.single_xpath("@w:abstractNumId")
-    levels = dict(map(_read_level, element.xpath("w:lvl")))
+    abstract_num_id = element.find_value("@w:abstractNumId")
+    levels = dict(map(_read_level, element.find_nodes("w:lvl")))
     return abstract_num_id, definition(levels=levels)
 
 def _read_level(element):
-    level_number = int(element.single_xpath("@w:ilvl"))
-    start = int(element.single_xpath("w:start/@w:val"))
+    level_number = int(element.find_value("@w:ilvl"))
+    start = int(element.find_value("w:start/@w:val"))
     return level_number, Level(start=start)
 
 def _read_definition(abstract_definitions, element):
-    num_id = element.single_xpath("@w:numId")
-    abstract_num_id = element.single_xpath("w:abstractNumId/@w:val")
+    num_id = element.find_value("@w:numId")
+    abstract_num_id = element.find_value("w:abstractNumId/@w:val")
     return num_id, abstract_definitions[abstract_num_id]
 
 Numbering = collections.namedtuple("Numbering", ["definitions"])

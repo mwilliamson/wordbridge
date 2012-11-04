@@ -1,5 +1,4 @@
 from nose.tools import istest, assert_equal
-from lxml import etree
 
 from wordbridge import openxml
 from wordbridge.htmlgeneration import HtmlGenerator

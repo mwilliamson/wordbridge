@@ -1,31 +1,36 @@
-from lxml import etree
+from xml.dom import minidom
+import xpath
 
 def parse_string(string):
-    return XmlElement(etree.fromstring(string))
-    
-class XmlElement(object):
-    def __init__(self, element):
-        self._element = element
+    return XmlNode(minidom.parseString(string))
+
+class XmlNode(object):
+    def __init__(self, node):
+        self._node = node
         
-    def xpath(self, xpath):
-        elements = self._element.xpath(xpath, namespaces=_WORD_NAMESPACES)
-        return map(self._wrap_element, elements)
+    def find_nodes(self, expr):
+        nodes = _xpath_context.find(expr, self._node)
+        return map(XmlNode, nodes)
     
-    def single_xpath(self, xpath):
-        return _single_or_none(self.xpath(xpath))
+    def find_node(self, expr):
+        return _single_or_none(self.find_nodes(expr))
+    
+    def find_values(self, expr):
+        return [node.value for node in self.find_nodes(expr)]
+    
+    def find_value(self, expr):
+        return _single_or_none(self.find_values(expr))
     
     def text(self):
-        return self._element.text
+        return self._node.data
+    
+    @property
+    def value(self):
+        return self._node.nodeValue
     
     def __repr__(self):
         return "XmlElement({0})".format(self._element.tag)
         
-    def _wrap_element(self, element):
-        if isinstance(element, basestring):
-            return element
-        else:
-            return XmlElement(element)
-
 def _single_or_none(elements):
     length = len(elements)
     if length == 0:
@@ -34,6 +39,10 @@ def _single_or_none(elements):
         return elements[0]
     else:
         raise RuntimeError("list has {0} elements".format(length))
+
+
+_xpath_context = xpath.XPathContext()
+_xpath_context.namespaces['w'] = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 
 _WORD_NAMESPACES = {
     "w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"

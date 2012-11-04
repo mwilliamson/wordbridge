@@ -1,2 +1,2 @@
 nose==1.2.1
-lxml==3.0.1
+py-dom-xpath==0.1
